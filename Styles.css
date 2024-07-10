@@ -1,0 +1,31 @@
+.flavor-category {
+  margin: 10px;
+  padding: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  color: white; /* Set font color to white */
+}
+
+.flavor-category.main-category {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.flavor-category .category-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.subcategory-container {
+  margin-left: 0px;
+}
+
+.flavor-item {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  color: white; /* Set font color to white */
+}
