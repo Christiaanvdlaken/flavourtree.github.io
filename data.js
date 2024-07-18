@@ -392,7 +392,7 @@ const flavorColors = {
   "Star Anise": "#301934",
   Syrup: "#FF7F50",
   "Golden Syrup": "#DAA520",
-  Floral: "#C70039",
+  Floral: "#D1006B",
   Chamomile: "#FFFACD",
   Rose: "#C10032",
   Jasmine: "#F8F8FF",
