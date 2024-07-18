@@ -113,4 +113,105 @@ function createFlavorWheel(wheel) {
   }
 }
 
+function setupSearch() {
+  console.log("Setting up search");
+  const searchBar = document.getElementById('search-bar');
+  if (!searchBar) {
+    console.error("Search bar not found");
+    return;
+  }
+  searchBar.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase().trim();
+    console.log("Search term:", searchTerm);
+    if (searchTerm) {
+      searchAndRevealFlavor(searchTerm);
+    } else {
+      resetFlavorWheel();
+    }
+  });
+}
+
+function searchAndRevealFlavor(searchTerm) {
+  console.log("Searching for:", searchTerm);
+  let found = false;
+  let foundPath = [];
+
+  function searchInCategory(category, flavors, path = []) {
+    console.log("Searching in category:", category);
+    if (Array.isArray(flavors)) {
+      for (const flavor of flavors) {
+        if (flavor.toLowerCase().includes(searchTerm)) {
+          console.log("Found match:", flavor);
+          found = true;
+          foundPath = [...path, category, flavor];
+          return true;
+        }
+      }
+    } else if (typeof flavors === 'object') {
+      for (const subcategory in flavors) {
+        if (searchInCategory(subcategory, flavors[subcategory], [...path, category])) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  searchInCategory('root', flavorWheel);
+
+  if (found) {
+    revealPath(foundPath);
+  } else {
+    console.log("No match found");
+    resetFlavorWheel();
+  }
+}
+
+function revealPath(path) {
+  console.log("Revealing path:", path);
+  const allItems = document.querySelectorAll('.flavor-category, .flavor-item');
+  allItems.forEach(item => item.style.display = 'none');
+
+  let currentLevel = document.getElementById('flavor-wheel');
+  
+  path.forEach((item, index) => {
+    console.log("Revealing item:", item);
+    const itemElement = Array.from(currentLevel.children).find(el => el.textContent.trim() === item);
+    if (itemElement) {
+      itemElement.style.display = '';
+      if (index === path.length - 1) {
+        itemElement.classList.add('search-highlight');
+      } else {
+        itemElement.classList.remove('search-highlight');
+        const nextLevel = itemElement.nextElementSibling;
+        if (nextLevel && nextLevel.classList.contains('subcategory-container')) {
+          nextLevel.style.display = '';
+          currentLevel = nextLevel;
+        } else {
+          console.log("Simulating click on:", item);
+          itemElement.click(); // Simulate click to open subcategory
+          currentLevel = itemElement.nextElementSibling;
+        }
+      }
+    } else {
+      console.error("Item not found:", item);
+    }
+  });
+}
+
+function resetFlavorWheel() {
+  console.log("Resetting flavor wheel");
+  const allItems = document.querySelectorAll('.flavor-category, .flavor-item');
+  allItems.forEach(item => {
+    item.style.display = '';
+    item.classList.remove('search-highlight');
+  });
+  const subcategoryContainers = document.querySelectorAll('.subcategory-container');
+  subcategoryContainers.forEach(container => container.remove());
+  document.getElementById('flavor-wheel').style.gridTemplateColumns = '';
+}
+
+// Initialize the flavor wheel and search functionality
+console.log("Initializing app");
 createFlavorWheel(flavorWheel);
+setupSearch();
